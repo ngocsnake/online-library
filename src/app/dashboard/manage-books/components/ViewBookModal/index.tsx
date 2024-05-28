@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import BookStatusTag from "../BookStatusTag";
 
 interface ViewBookModalProps {
   isOpen: boolean;
@@ -40,23 +41,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
           {
             fieldName: "Trạng thái",
-            value: (
-              <Tag
-                color={
-                  detail?.status === BookStatus.AVAILABLE
-                    ? "green"
-                    : detail?.status === BookStatus.OVERDUE || overdued
-                    ? "red"
-                    : "orange"
-                }
-              >
-                {detail?.status === BookStatus.AVAILABLE
-                  ? "Đang trên kệ"
-                  : detail?.status === BookStatus.OVERDUE || overdued
-                  ? "Quá hạn"
-                  : "Đang mượn"}
-              </Tag>
-            ),
+            value: <BookStatusTag record={detail} />,
           },
           {
             fieldName: "Hạn mức mượn",

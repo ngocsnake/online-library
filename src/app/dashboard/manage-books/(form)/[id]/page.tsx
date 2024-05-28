@@ -30,13 +30,17 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
 import Link from "next/link";
 import { getDaysDiff } from "@/lib/utils/getDaysDiff";
+import { SessionContext } from "@/components/shared/SessionContext";
+import { RoleEnum } from "@/lib/models/account.model";
+import BookStatusTag from "../../components/BookStatusTag";
 
 export default function BookDetail() {
+  const { account } = useContext(SessionContext);
   const router = useRouter();
   const { id } = useParams();
   const [{ data }, getBook] = useFormState(getBookDetailAction, {
@@ -84,23 +88,7 @@ export default function BookDetail() {
     },
     {
       fieldName: "Trạng thái",
-      value: (
-        <Tag
-          color={
-            data?.book?.status === BookStatus.AVAILABLE
-              ? "green"
-              : data?.book?.status === BookStatus.OVERDUE || overdued
-              ? "red"
-              : "orange"
-          }
-        >
-          {data?.book?.status === BookStatus.AVAILABLE
-            ? "Đang trên kệ"
-            : data?.book?.status === BookStatus.OVERDUE || overdued
-            ? "Quá hạn"
-            : "Đang mượn"}
-        </Tag>
-      ),
+      value: <BookStatusTag record={data?.book} />,
     },
     {
       fieldName: "Hạn mức mượn",
@@ -112,7 +100,9 @@ export default function BookDetail() {
     info.push({
       fieldName: "Người tặng",
       value: (
-        <Link href={`/dashboard/manage-accounts/${data?.book?.giver?._id}`}>{data?.book?.giver?.fullName}</Link>
+        <Link href={`/dashboard/manage-accounts/${data?.book?.giver?._id}`}>
+          {data?.book?.giver?.fullName}
+        </Link>
       ),
     });
   }
@@ -137,45 +127,47 @@ export default function BookDetail() {
                   {data?.book?.name}
                   {data?.book?.authorName ? " - " + data?.book?.authorName : ""}
                 </Typography.Title>
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        icon: <EditOutlined />,
-                        key: "edit",
-                        label: "Sửa thông tin",
-                        onClick: () => {
-                          router.push(`/dashboard/manage-books/update/${id}`);
+                {account?.role !== RoleEnum.USER && (
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          icon: <EditOutlined />,
+                          key: "edit",
+                          label: "Sửa thông tin",
+                          onClick: () => {
+                            router.push(`/dashboard/manage-books/update/${id}`);
+                          },
                         },
-                      },
-                      {
-                        key: "d",
-                        type: "divider",
-                      },
-                      {
-                        icon: <DeleteOutlined />,
-                        key: "delete",
-                        label: "Xóa sách",
-                        onClick: () => {
-                          Modal.confirm({
-                            title: "Hành động này không thể hoàn tác!",
-                            content: `Xác nhận xóa sách`,
-                            okText: "Xóa",
-                            cancelText: "Hủy",
-                            onOk: () => {
-                              deleteAction(id as string);
-                            },
-                          });
+                        {
+                          key: "d",
+                          type: "divider",
                         },
-                      },
-                    ],
-                  }}
-                  trigger={["click"]}
-                >
-                  <Button type="text" shape="circle">
-                    <EllipsisOutlined />
-                  </Button>
-                </Dropdown>
+                        {
+                          icon: <DeleteOutlined />,
+                          key: "delete",
+                          label: "Xóa sách",
+                          onClick: () => {
+                            Modal.confirm({
+                              title: "Hành động này không thể hoàn tác!",
+                              content: `Xác nhận xóa sách`,
+                              okText: "Xóa",
+                              cancelText: "Hủy",
+                              onOk: () => {
+                                deleteAction(id as string);
+                              },
+                            });
+                          },
+                        },
+                      ],
+                    }}
+                    trigger={["click"]}
+                  >
+                    <Button type="text" shape="circle">
+                      <EllipsisOutlined />
+                    </Button>
+                  </Dropdown>
+                )}
               </Flex>
               <Typography.Text className="book-description mb-2">
                 {data?.book?.description}

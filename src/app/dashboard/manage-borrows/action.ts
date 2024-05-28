@@ -1,6 +1,6 @@
 "use server";
 
-import { Borrow, BorrowDocument } from "@/lib/models/borrow.model";
+import { Borrow, BorrowDocument, BorrowStatus } from "@/lib/models/borrow.model";
 import { borrowService } from "@/lib/services/borrow.service";
 import { dbService } from "@/lib/services/db.service";
 
@@ -13,6 +13,7 @@ export interface GetBookPayload {
 export async function createBorrowAction(prev: any, payload: Borrow) {
   await dbService.connect();
   try {
+    payload.status = BorrowStatus.BORROWING;
     await borrowService.create(payload);
     return {
       success: true,
@@ -30,6 +31,26 @@ export async function getBorrowAction(_: any, payload: GetBookPayload) {
   await dbService.connect();
   const { page = 1, limit = 20, filter } = payload;
   return await borrowService.get(page, limit, filter);
+}
+
+export async function acceptBorrowAction(_prev: any, borrowId: string) {
+  await dbService.connect();
+  try {
+    const data = await borrowService.acceptBorrow(borrowId);
+    return { success: true, data, message: "Đã phê duyệt phiếu mượn" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function cancelBorrowAction(_prev: any, borrowId: string) {
+  await dbService.connect();
+  try {
+    const data = await borrowService.declineBorrow(borrowId);
+    return { success: true, data, message: "Đã từ chối phiếu mượn" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
 }
 
 export async function deleteBorrowAction(_: any, _id: string) {

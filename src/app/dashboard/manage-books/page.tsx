@@ -20,6 +20,7 @@ import { deleteBookAction, getBookAction } from "./action";
 import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
 import { getDaysDiff } from "@/lib/utils/getDaysDiff";
+import BookStatusTag from "./components/BookStatusTag";
 
 function ManageBook() {
   const [loading, setLoading] = useState(true);
@@ -142,26 +143,7 @@ function ManageBook() {
       title: "Tình trạng sách",
       key: "status",
       align: "center",
-      render: (record: Book) => {
-        const overdued = getDaysDiff(record.borrowRecord?.returnDate) < 0;
-        return (
-          <Tag
-            color={
-              record?.status === BookStatus.AVAILABLE
-                ? "green"
-                : record?.status === BookStatus.OVERDUE || overdued
-                ? "red"
-                : "orange"
-            }
-          >
-            {record?.status === BookStatus.AVAILABLE
-              ? "Đang trên kệ"
-              : record?.status === BookStatus.OVERDUE || overdued
-              ? "Quá hạn"
-              : "Đang mượn"}
-          </Tag>
-        );
-      },
+      render: (record: Book) => <BookStatusTag record={record} />,
     },
     {
       title: "Ngày mượn",
