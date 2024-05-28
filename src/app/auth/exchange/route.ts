@@ -1,11 +1,13 @@
 import {getSession} from "@/lib/utils/getSession";
 import {NextRequest, NextResponse} from "next/server";
 import httpStatus from "http-status";
+import {headers} from "next/headers";
 
 export async function GET(req: NextRequest) {
   const session = await getSession();
-  const url = new URL(req.url);
-  console.log('url', url);
+  const hostHeader = headers().get('Host') ?? req.nextUrl.host;
+  const url = new URL(req.nextUrl);
+  // url.hostname = hostHeader;
   const redirectUri = url.searchParams.get("redirect_uri");
   if (redirectUri) {
     session.auth = {
