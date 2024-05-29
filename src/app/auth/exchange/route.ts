@@ -7,13 +7,18 @@ export async function GET(req: NextRequest) {
   const session = await getSession();
   const hostHeader = headers().get('Host') ?? req.nextUrl.host;
   const url = new URL(req.nextUrl);
-  // url.hostname = hostHeader;
+  if (url.host !== hostHeader) {
+    url.host = hostHeader;
+    url.port = '';
+  }
   const redirectUri = url.searchParams.get("redirect_uri");
   if (redirectUri) {
     session.auth = {
       mode: 'mobile_redirect',
       redirect_uri: redirectUri,
     };
+    console.log('session.auth', session.auth);
+    console.log(url.origin);
     await session.save();
     return NextResponse.redirect(`${url.origin}/auth/login`);
   } else {
