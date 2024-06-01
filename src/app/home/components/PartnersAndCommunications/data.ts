@@ -39,6 +39,11 @@ export const partnersOne = [
     name: "ColorME",
     image: "/images/partners/color-me.jpg",
   },
+  {
+    id: 9,
+    name: "Alpha Books",
+    image: "/images/partners/alpha-books.jpg",
+  },
 ]
 
 export const partnersTwo = [
@@ -65,11 +70,11 @@ export const partnersTwo = [
   {
     id: 5,
     name: "Tiệm hoa Lách Cách",
-    image: "/images/partners/tiem-hoa-lach-cach.webp",
+    image: "/images/partners/tiem-hoa-lach-cach.jpg",
   },
   {
     id: 6,
-    name: "Phố sách 19/12",
+    name: "Phố Sách Hà Nội 19/12",
     image: "/images/partners/pho-sach-ha-noi-19-12.jpg",
   },
   {
@@ -77,11 +82,24 @@ export const partnersTwo = [
     name: "Complex01",
     image: "/images/partners/complex01.jpg",
   },
+  {
+    id: 8,
+    name: "Thợ Viết Production",
+    image: "/images/partners/tho-viet-production.png",
+  },
 ]
 
 export const communications = [
   {
-    id: 5,
+    id: 1,
+    banner: "/images/communications/communication-6.jpg",
+    title: "Thư viện sách “Ba Không” Cà phê sáng với VTV3",
+    description: "",
+    logo: "/images/communications/vtv3.png",
+    url: "https://www.youtube.com/watch?v=0IXN5BXorsk&t=36s"
+  },
+  {
+    id: 2,
     banner: "/images/communications/communication-4.jpg",
     title: "Nhóm bạn trẻ nỗ lực để sách không còn “nằm im”",
     description: "",
@@ -89,15 +107,7 @@ export const communications = [
     url: "https://tuoitrethudo.vn/nhom-ban-tre-no-luc-de-sach-khong-con-nam-im-219544.html"
   },
   {
-    id: 1,
-    banner: "/images/communications/communication-1.svg",
-    title: "D Free Book-Thư viện sách miễn phí giữa lòng Thủ đô",
-    description: "Tận hưởng kho sách phong phú tại D Free Book hoàn toàn miễn phí. Bạn có thể mượn và đọc sách mà không tốn bất kỳ chi phí nào.",
-    logo: "/images/communications/tap-chi-tri-thuc.svg",
-    url: "https://znews.vn/lan-toa-van-hoa-doc-khong-de-sach-nam-im-tren-gia-post1411859.html"
-  },
-  {
-    id: 3,
+    id: 4,
     banner: "/images/communications/communication-5.jpg",
     title: "D Free Book - Điểm hẹn đọc sách báo miễn phí",
     description: "",
@@ -105,7 +115,15 @@ export const communications = [
     url: "https://www.youtube.com/watch?v=uOT5Wwec2D4"
   },
   {
-    id: 4,
+    id: 3,
+    banner: "/images/communications/communication-1.svg",
+    title: "D Free Book-Thư viện sách miễn phí giữa lòng Thủ đô",
+    description: "Tận hưởng kho sách phong phú tại D Free Book hoàn toàn miễn phí. Bạn có thể mượn và đọc sách mà không tốn bất kỳ chi phí nào.",
+    logo: "/images/communications/tap-chi-tri-thuc.svg",
+    url: "https://znews.vn/lan-toa-van-hoa-doc-khong-de-sach-nam-im-tren-gia-post1411859.html"
+  },
+  {
+    id: 5,
     banner: "/images/communications/communication-3.svg",
     title: "Lan tỏa văn hóa đọc, không để sách nằm im trên giá",
     description: "",
@@ -113,7 +131,7 @@ export const communications = [
     url: "https://vietnam.vnanet.vn/vietnamese/tin-tuc/d-free-book-thu-vien-sach-mien-phi-giua-long-thu-do-262196.html"
   },
   {
-    id: 2,
+    id: 6,
     banner: "/images/communications/communication-2.svg",
     title: "Thư viện “3 không” D Free Book",
     description: "Tham gia các buổi workshop thú vị về sách, viết lách, và nhiều chủ đề hấp dẫn khác. Học hỏi và kết nối với những người có cùng đam mê.",

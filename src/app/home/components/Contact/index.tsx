@@ -4,38 +4,7 @@ import styles from "./styles.module.scss";
 import {BookOpenCover} from "@/components/icons/BookOpenCover";
 import {Typography} from "antd";
 import Logo from "@/assets/figures/logo.svg";
-import {PhoneCall, Home, Mail} from "@/components/icons";
-
-export const contacts = [
-  {
-    id: 1,
-    title: "Cơ sở Đại La: ",
-    description: "Số 107, khu tập thể A5, ngõ 128C Đại La",
-    type: "address",
-    icon: <Home/>,
-  },
-  {
-    id: 2,
-    title: "Cơ sở Cầu Giấy: ",
-    description: "Số 2 ngõ Viện Máy, đường Phạm Văn Đồng",
-    icon: <Home/>,
-    type: "address"
-  },
-  {
-    id: 1,
-    title: "Email",
-    description: "thuviendfb@gmail.com",
-    icon: <Mail/>,
-    type: "email"
-  },
-  {
-    id: 1,
-    title: "Điện thoại",
-    description: "0962.188.248 (Đại La) / 0986.689.024 (Cầu Giấy)",
-    icon: <PhoneCall/>,
-    type: "phoneNumber"
-  }
-];
+import {contacts} from "@/app/home/components/Contact/data";
 
 export default function Contact() {
   return (

@@ -8,6 +8,7 @@ import Image from "next/image";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/css";
 import {useCallback, useRef} from "react";
+import Fundraising from "@/app/home/components/PartnersAndCommunications/Fundraising";
 
 export default function PartnersAndCommunications() {
   const sliderRef = useRef<any>();
@@ -23,11 +24,11 @@ export default function PartnersAndCommunications() {
   }, []);
 
   return (
-    <div className={styles.wrapper}>
+    <div id="partners-communications" className={styles.wrapper}>
       <div>
-        <Typography.Title className="mb-2 text-center">Đối tác & Truyền thông</Typography.Title>
+        <Typography.Title className="mb-2 text-center">Đối tác</Typography.Title>
         <Typography.Text className="text-center visible">
-          Hợp tác với hơn 17+ doanh nghiệp, câu lạc bộ,...
+          Hợp tác với nhiều doanh nghiệp, dự án, câu lạc bộ...
         </Typography.Text>
       </div>
       <div className="mt-16 flex flex-col gap-12 overflow-hidden pt-1 pb-16">
@@ -67,6 +68,12 @@ export default function PartnersAndCommunications() {
             ))}
           </div>
         </div>
+      </div>
+      <div className="mt-12 mb-16">
+        <Typography.Title className="mb-2 text-center">Truyền thông nói về D Free Book</Typography.Title>
+        <Typography.Text className="text-center visible">
+          Thư viện đã được đưa tin trên các kênh báo chí, truyền thông lớn và uy tín
+        </Typography.Text>
       </div>
       <div className={styles.communicationWrapper}>
         <Swiper
@@ -125,10 +132,11 @@ export default function PartnersAndCommunications() {
             onClick={handleNext}
             className={styles.actionButton}
             shape="circle"
-             icon={<ArrowRightOutlined/>}
+            icon={<ArrowRightOutlined/>}
           />
         </div>
       </div>
+      <Fundraising/>
     </div>
   )
 }

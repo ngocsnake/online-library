@@ -9,9 +9,16 @@
     z-index: 200;
 
     .image {
+      display: flex;
+      justify-content: center;
       width: auto;
       height: 330px;
-      object-fit: cover;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+      }
     }
 
     .info {

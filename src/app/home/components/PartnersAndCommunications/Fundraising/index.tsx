@@ -10,8 +10,8 @@ export default function Fundraising() {
       <div className={styles.container}>
         <Row gutter={[48, 48]}>
           <Col xs={24} lg={12}>
-            <div className="flex justify-center">
-              <img className={styles.image} src="/images/rafiki.svg" alt="img"/>
+            <div className={styles.image}>
+              <img src="/images/image-1.jpg" alt="img"/>
             </div>
           </Col>
           <Col xs={24} lg={12}>
