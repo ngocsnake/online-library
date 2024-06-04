@@ -1,10 +1,11 @@
 import Mailgun from 'mailgun.js';
+import { appEnv } from '../configs/env';
 
 const mailgun = new Mailgun(FormData);
 
 class MailingService {
   getClient() {
-    const mailgunKey = process.env.MAILGUN_API_KEY!
+    const mailgunKey = appEnv.maigun.apiKey;
     if (!mailgunKey) throw new Error("Please configure mailgun first!");
 
     return mailgun.client({
@@ -14,7 +15,7 @@ class MailingService {
   }
   sendEmail(to: string, subject: string, body: string) {
     const client = this.getClient();
-    return client.messages.create(process.env.MAILGUN_DOMAIN ?? 'dev.stable.vn', {
+    return client.messages.create(appEnv.maigun.domain ?? 'dev.stable.vn', {
       to,
       from: 'noreply@dfreebooks.com',
       subject,
