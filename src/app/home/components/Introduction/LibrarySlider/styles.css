@@ -1,0 +1,11 @@
+.library-slider {
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform .3s;
+    &:hover {
+        transform: scale(1.3);
+    }
+  }
+}

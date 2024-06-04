@@ -32,6 +32,7 @@
     "nprogress": "^0.2.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-grid-gallery": "^1.0.1",
     "react-redux": "^9.0.4",
     "react-scroll": "^1.9.0",
     "react-spreadsheet": "^0.9.4",

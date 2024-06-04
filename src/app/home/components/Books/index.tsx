@@ -13,7 +13,7 @@ export default function Books() {
           <Typography.Title className="mb-2 text-center">Sách được ưa thích </Typography.Title>
           <Typography.Text className="text-center visible">Chúng tôi đã có hơn 50+ thể loại sách tại thư viện D
             Free</Typography.Text>
-          <div className="mt-8">
+          <div className="mt-16">
             <Row gutter={[40, 40]}>
               {favoriteBooks.map(item => (
                 <Col key={item.id} xs={24} lg={12}>
