@@ -1,19 +1,24 @@
 import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
+import { IComment } from "./comment.model";
+import { any } from "zod";
 
 export enum PostStatus {
-  PRIVATE = "private",
-  PUBLIC = "public",
   PENDING = "pending",
-  CANCELLED = "cancelled",
+  REJECTED = "rejected",
+  APPROVED = "approved",
 }
 
 export interface IPost {
   title: string;
   content: string;
   author: Account;
-  status: PostStatus;
-  isDelete: boolean;
+  status?: PostStatus;
+  isDelete?: boolean;
+  createdAt?: string;
+  likes?: Account[];
+  comments: IComment[];
+  pin: boolean;
 }
 
 const PostSchema = new mongoose.Schema<IPost>(
@@ -22,8 +27,15 @@ const PostSchema = new mongoose.Schema<IPost>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Account",
     },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     title: String,
     content: String,
+    pin: Boolean,
     status: {
       type: String,
       enum: Object.values(PostStatus),
@@ -32,6 +44,12 @@ const PostSchema = new mongoose.Schema<IPost>(
       type: Boolean,
       default: false,
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+      },
+    ],
   },
   { timestamps: true }
 );

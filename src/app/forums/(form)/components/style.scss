@@ -1,0 +1,42 @@
+.post-content {
+  margin-top: 12px;
+  border-radius: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .ql-snow .ql-editor img {
+    // max-width: 700px !important;
+  }
+
+  .ql-toolbar.ql-snow {
+    border: none;
+    background-color: #f9f9f9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid rgb(223, 223, 223);
+  }
+  .ql-container.ql-snow {
+    height: 240px;
+    min-height: 240px;
+    border: none;
+    flex: 1;
+    overflow: auto;
+
+    .ql-editor {
+      padding: 12px;
+    }
+
+    .ql-editor.ql-blank:before {
+      font-style: normal;
+      color: #BFBFBF;
+    }
+  }
+
+  * {
+    img {
+      max-width: 200px;
+    }
+  }
+}

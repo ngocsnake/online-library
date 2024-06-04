@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import styles from "./LoginForm.module.scss";
 import { toast } from "@/lib/utils/toast";
-import {useSearchParams} from "next/navigation";
 
 interface LoginFormProps {
   onSuccess?: () => any;
