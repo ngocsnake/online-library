@@ -1,3 +1,5 @@
+"use client";
+
 import { useDisclosure } from "@/lib/hooks/useDisclosure";
 import { Button, Col, Flex, Input, Modal, Row, Typography } from "antd";
 import PostForm from "../(form)/components/PostForm";

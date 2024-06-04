@@ -27,9 +27,9 @@ export default function CommentCard({
   replies,
   set,
 }: {
-  data: IComment;
+  data: any;
   postId: string;
-  replies?: IComment[];
+  replies?: any[];
   set: any;
 }) {
   const [doComment, commentStatus] = useRequest(postService.comment);
@@ -46,7 +46,8 @@ export default function CommentCard({
   } = theme.useToken();
 
   const liked = !!data.likes?.find(
-    (item) => item?.toString() === account?._id || item._id === account?._id
+    (item: any) =>
+      item?.toString() === account?._id || item._id === account?._id
   );
 
   useEffect(() => {
@@ -200,7 +201,7 @@ export default function CommentCard({
           <div className="w-full flex flex-col gap-6 mt-3">
             {replies?.map((item, index) => {
               const liked = !!item.likes?.find(
-                (item) =>
+                (item: any) =>
                   item?.toString() === account?._id || item._id === account?._id
               );
               return (

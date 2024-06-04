@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { IComment } from "./comment.model";
+import { any } from "zod";
 
 export enum PostStatus {
   PENDING = "pending",
@@ -9,7 +10,6 @@ export enum PostStatus {
 }
 
 export interface IPost {
-  _id?: string;
   title: string;
   content: string;
   author: Account;

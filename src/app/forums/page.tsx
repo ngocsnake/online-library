@@ -4,17 +4,12 @@ import ForumHeader from "@/app/forums/components/ForumHeader";
 import { SessionContext } from "@/components/shared/SessionContext";
 import useApiRequest from "@/lib/hooks/useApiRequest";
 import { RoleEnum } from "@/lib/models/account.model";
-import { IPost } from "@/lib/models/post.model";
 import { postService } from "@/lib/services/post.service";
 import { Card, Col, Row, Skeleton, Typography } from "antd";
 import { useContext, useEffect } from "react";
 import PostCard from "./components/PostCard";
 
-export default function ForumLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ForumPage() {
   const { account } = useContext(SessionContext);
   const [doGet, { data, loading }] = useApiRequest(postService.get);
 
@@ -74,7 +69,7 @@ export default function ForumLayout({
               </div>
             ) : (
               <div className="flex flex-col gap-6">
-                {data?.docs?.map((item: IPost) => {
+                {data?.docs?.map((item: any) => {
                   return <PostCard item={item} key={item._id} />;
                 })}
 

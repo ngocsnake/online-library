@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import "./style.scss";
 import { FormAction } from "@/constants/app.constant";
-import { Button, Input, Typography } from "antd";
-import { IPost, PostDocument } from "@/lib/models/post.model";
-import { useRouter } from "next/navigation";
 import useApiRequest from "@/lib/hooks/useApiRequest";
+import { IPost } from "@/lib/models/post.model";
 import { postService } from "@/lib/services/post.service";
 import { toast } from "@/lib/utils/toast";
+import { Button, Input } from "antd";
+import { useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import "./style.scss";
+
+import dynamic from "next/dynamic";
+
+const DynamicQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const modules = {
   toolbar: [
@@ -29,8 +31,11 @@ interface FormProps {
 }
 
 export default function PostForm(props: FormProps) {
+  if (!document) return <textarea id="editor-fallback" />;
+
   const { action, onFinish } = props;
   const [doCreate, createStatus] = useApiRequest(postService.create);
+  const [quill, setQuill] = useState(<></>);
 
   const [post, setPost] = useState<Partial<IPost>>({});
 
@@ -44,7 +49,7 @@ export default function PostForm(props: FormProps) {
   const onSubmit = async () => {
     if (action === FormAction.CREATE) {
       await doCreate(post);
-      toast(createStatus.data)
+      toast(createStatus.data);
       onFinish && onFinish();
       setState("title", "");
       setState("content", "");
@@ -66,7 +71,7 @@ export default function PostForm(props: FormProps) {
           setState("title", e.target.value);
         }}
       />
-      <ReactQuill
+      <DynamicQuill
         placeholder="Nhập nội dung bài viết..."
         theme="snow"
         value={post.content}
@@ -78,6 +83,7 @@ export default function PostForm(props: FormProps) {
         className="post-content"
         style={{ backgroundColor: "white" }}
       />
+      {quill}
       <Button
         className="mt-4"
         style={{ marginBottom: -8 }}

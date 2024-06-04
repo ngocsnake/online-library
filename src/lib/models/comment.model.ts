@@ -2,7 +2,6 @@ import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 
 export interface IComment {
-  _id?: string;
   author: Account;
   content: string;
   likes: Account[];

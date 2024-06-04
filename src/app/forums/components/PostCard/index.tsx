@@ -31,7 +31,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 TimeAgo.addDefaultLocale(vi);
 
-export default function PostCard({ item }: { item: IPost }) {
+export default function PostCard({ item }: { item: any }) {
   const { account } = useContext(SessionContext);
   const [post, setPost] = useState(item);
   const [doDelete, deleteStatus] = useRequest(postService.delete);
@@ -102,7 +102,8 @@ export default function PostCard({ item }: { item: IPost }) {
   }, [deleteStatus.status]);
 
   const liked = !!post?.likes?.find(
-    (item) => item?.toString() === account?._id || item._id === account?._id
+    (item: any) =>
+      item?.toString() === account?._id || item._id === account?._id
   );
 
   return (

@@ -3,17 +3,16 @@
 import { SessionContext } from "@/components/shared/SessionContext";
 import useRequest, { RequestStatus } from "@/lib/hooks/useRequest";
 import { RoleEnum } from "@/lib/models/account.model";
-import { IPost } from "@/lib/models/post.model";
 import { postService } from "@/lib/services/post.service";
 import {
   CommentOutlined,
   DeleteOutlined,
+  EllipsisOutlined,
   HeartFilled,
   HeartOutlined,
   LeftOutlined,
   LineOutlined,
   PushpinOutlined,
-  EllipsisOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -30,24 +29,24 @@ import {
   theme,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
 import TimeAgo from "javascript-time-ago";
 import vi from "javascript-time-ago/locale/vi";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import CommentCard from "../components/CommentCard";
-import dayjs from "dayjs";
 
 TimeAgo.addDefaultLocale(vi);
 
 export default function FormDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
   const timeAgo = new TimeAgo("vi-VN");
-  const [postData, setPostData] = useState<IPost | undefined>(undefined);
+  const [postData, setPostData] = useState<any>(undefined);
   const [getById, getStatus] = useRequest(postService.getByID);
   const [comment, setComment] = useState("");
 
   const commentsLevel1 = postData?.comments
-    .filter((item) => !item.parent)
+    .filter((item: any) => !item.parent)
     .sort((b: any, a: any) => dayjs(a.createdAt).diff(b.createdAt));
 
   useEffect(() => {
@@ -133,7 +132,8 @@ export default function FormDetail({ params }: { params: { id: string } }) {
   }, [commentStatus.status]);
 
   const liked = !!postData?.likes?.find(
-    (item) => item?.toString() === account?._id || item._id === account?._id
+    (item: any) =>
+      item?.toString() === account?._id || item._id === account?._id
   );
 
   return (
@@ -262,7 +262,7 @@ export default function FormDetail({ params }: { params: { id: string } }) {
                   key={item?._id}
                   data={item}
                   replies={postData?.comments.filter(
-                    (cmt) => cmt?.root == item?._id
+                    (cmt: any) => cmt?.root == item?._id
                   )}
                 />
               ))}
