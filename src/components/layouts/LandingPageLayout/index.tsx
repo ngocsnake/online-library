@@ -18,9 +18,7 @@ export default async function LandingPageLayout({children}: any) {
           theme={{
             token: {
               colorPrimary: '#4A6F73',
-              colorText: '#717171',
               colorLink: '#006D75',
-              colorTextHeading: "#4D4D4D",
               fontSize: 14,
             },
             components: {
@@ -31,7 +29,6 @@ export default async function LandingPageLayout({children}: any) {
                 fontSizeHeading1: 36
               },
               Input: {
-                colorBgContainer: "#eee"
               },
               Rate: {
                 colorFillContent: "#DEDEDE",

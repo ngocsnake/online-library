@@ -56,8 +56,9 @@ export default function Contact() {
                   <Element
                     style={{textDecoration: "none"}}
                     href={item.type === "email" ? `mailto: ${item.description}` : "#"}
+                    key={item.id}
                   >
-                    <div key={item.id} className={styles.contactItem}>
+                    <div className={styles.contactItem}>
                       <div className={styles.icon}>
                         {item.icon}
                       </div>

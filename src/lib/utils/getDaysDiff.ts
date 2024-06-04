@@ -1,7 +1,7 @@
-import { Borrow } from "../models/borrow.model";
+import { Borrow, BorrowStatus } from "../models/borrow.model";
 
 export const getDaysDiff = (borrow?: Borrow | Partial<Borrow>) => {
-  if (!borrow) {
+  if (!borrow || borrow.status === BorrowStatus.PENDING) {
     return {
       diff: 0,
       label: "-",

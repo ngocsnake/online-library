@@ -264,7 +264,7 @@ export default function DashboardPageContent() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(10, 1fr)",
+                gridTemplateColumns: "repeat(8, 1fr)",
               }}
             >
               <div
@@ -298,17 +298,6 @@ export default function DashboardPageContent() {
                   fontWeight: 600,
                 }}
               >
-                Điện thoại
-              </div>
-              <div
-                style={{
-                  gridColumn: "span 2 / span 2",
-                  borderBottom: "1px solid #DFDFDF",
-                  padding: "12px 0",
-                  textAlign: "center",
-                  fontWeight: 600,
-                }}
-              >
                 Mã
               </div>
               <div
@@ -331,7 +320,7 @@ export default function DashboardPageContent() {
                   key={index}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(10, 1fr)",
+                    gridTemplateColumns: "repeat(8, 1fr)",
                   }}
                 >
                   <div
@@ -353,16 +342,6 @@ export default function DashboardPageContent() {
                     }}
                   >
                     {giver?.fullName}
-                  </div>
-                  <div
-                    style={{
-                      gridColumn: "span 2 / span 2",
-                      borderBottom: "1px solid #DFDFDF",
-                      padding: "12px 0",
-                      textAlign: "center",
-                    }}
-                  >
-                    xxxx{giver?.phoneNumber?.slice(-4)}
                   </div>
                   <div
                     style={{
@@ -432,7 +411,7 @@ export default function DashboardPageContent() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(10, 1fr)",
+                gridTemplateColumns: "repeat(8, 1fr)",
               }}
             >
               <div
@@ -466,17 +445,6 @@ export default function DashboardPageContent() {
                   fontWeight: 600,
                 }}
               >
-                Điện thoại
-              </div>
-              <div
-                style={{
-                  gridColumn: "span 2 / span 2",
-                  borderBottom: "1px solid #DFDFDF",
-                  padding: "12px 0",
-                  textAlign: "center",
-                  fontWeight: 600,
-                }}
-              >
                 Mã
               </div>
               <div
@@ -499,7 +467,7 @@ export default function DashboardPageContent() {
                   key={index}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(10, 1fr)",
+                    gridTemplateColumns: "repeat(8, 1fr)",
                   }}
                 >
                   <div
@@ -521,16 +489,6 @@ export default function DashboardPageContent() {
                     }}
                   >
                     {user?.fullName}
-                  </div>
-                  <div
-                    style={{
-                      gridColumn: "span 2 / span 2",
-                      borderBottom: "1px solid #DFDFDF",
-                      padding: "12px 0",
-                      textAlign: "center",
-                    }}
-                  >
-                    xxxx{user?.phoneNumber?.slice(-4)}
                   </div>
                   <div
                     style={{
