@@ -11,8 +11,9 @@ import PostCard from "./components/PostCard";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ForumPage({ author }: { author?: string }) {
+export default function ForumPage() {
   const { account } = useContext(SessionContext);
+  const author = undefined;
   const [doGet, { data, loading }] = useApiRequest(postService.get);
 
   const pathname = usePathname();

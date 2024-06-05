@@ -11,7 +11,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PostCard from "../components/PostCard";
 
-export default function ForumPage({ author }: { author?: string }) {
+export default function ForumPage() {
+  const author = undefined;
   const { account } = useContext(SessionContext);
   const [doGet, { data, loading }] = useApiRequest(postService.getLiked);
 
