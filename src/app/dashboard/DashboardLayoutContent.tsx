@@ -119,9 +119,9 @@ export default function DashboardLayoutContent(props: any) {
       disabled: isUserRole,
     },
     {
-      key: "manage-locations",
+      key: "forums",
       icon: <MessageOutlined />,
-      label: <Link href={"/dashboard/forums"}>Diễn đàn</Link>,
+      label: <Link href={"/forums"}>Diễn đàn</Link>,
     },
     {
       key: "settings",

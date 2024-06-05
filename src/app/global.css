@@ -107,16 +107,24 @@ body {
   white-space: nowrap;
 }
 
-.ant-layout-sider-trigger{
+.ant-layout-sider-trigger {
   border-right: 2px solid rgba(5, 5, 5, 0.06);
 }
 
-.security .ant-menu-item{
+.security .ant-menu-item {
   background-color: transparent !important;
   color: black !important;
 }
 
-.ant-modal.statistic{
+.ant-modal.statistic {
   width: unset !important;
   min-width: 520px;
+}
+
+.max-2-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
