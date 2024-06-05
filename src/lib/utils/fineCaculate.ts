@@ -1,8 +1,12 @@
-import { Borrow } from "../models/borrow.model";
+import { Borrow, BorrowStatus } from "../models/borrow.model";
 import { getDaysDiff } from "./getDaysDiff";
 
 export const fineCaculate = (borrow?: Borrow | Partial<Borrow>) => {
-  if (!borrow) {
+  if (
+    !borrow ||
+    borrow.status === BorrowStatus.PENDING ||
+    borrow.status === BorrowStatus.CANCEL
+  ) {
     return {
       amount: 0,
       label: "-",
