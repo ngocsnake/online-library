@@ -14,7 +14,7 @@ export const appEnv = {
   },
   maigun: {
     domain: getEnv<string>('MAILGUN_DOMAIN', false, 'Mailgun domain is not configured'),
-    apiKey: getEnv<string>('MAILGUN_API_KEY', true, 'Mailgun key is not configured'),
+    apiKey: getEnv<string>('MAILGUN_API_KEY', false, 'Mailgun key is not configured'),
   },
   security: {
     google: {
