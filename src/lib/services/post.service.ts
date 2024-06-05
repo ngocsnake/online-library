@@ -26,9 +26,15 @@ class PostService {
   }
 
   async get(queries: GetPostParams) {
-    return fetch(`/api/posts${objectToParams(queries)}`, {
-      body: JSON.stringify(queries),
-    }).then((res) => res.json());
+    return fetch(`/api/posts?${objectToParams(queries)}`).then((res) =>
+      res.json()
+    );
+  }
+
+  async getLiked(queries: GetPostParams) {
+    return fetch(`/api/posts/liked?${objectToParams(queries)}`).then((res) =>
+      res.json()
+    );
   }
 
   async getByID(id: string) {

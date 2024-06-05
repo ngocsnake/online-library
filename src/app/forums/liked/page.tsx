@@ -7,13 +7,13 @@ import { RoleEnum } from "@/lib/models/account.model";
 import { postService } from "@/lib/services/post.service";
 import { Card, Col, Row, Skeleton, Typography } from "antd";
 import { useContext, useEffect } from "react";
-import PostCard from "./components/PostCard";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import PostCard from "../components/PostCard";
 
 export default function ForumPage({ author }: { author?: string }) {
   const { account } = useContext(SessionContext);
-  const [doGet, { data, loading }] = useApiRequest(postService.get);
+  const [doGet, { data, loading }] = useApiRequest(postService.getLiked);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,19 +34,19 @@ export default function ForumPage({ author }: { author?: string }) {
         <Col span={7} style={{ borderRight: "1px solid #e7e7e7" }}>
           <div className="flex items-end flex-col gap-4">
             <div className="flex flex-col gap-4">
-              <Typography.Title level={5} type="secondary">
-                Hoạt động của tôi
-              </Typography.Title>
+              <Link href={`/forums/liked`}>
+                <Typography.Title level={5} type="secondary">
+                  Hoạt động của tôi
+                </Typography.Title>
+              </Link>
               <Link href={`/forums/author/${account?._id}`}>
                 <Typography.Text style={{ fontSize: 15 }}>
                   Bài viết của tôi
                 </Typography.Text>
               </Link>
-              <Link href={`/forums/liked`}>
-                <Typography.Text style={{ fontSize: 15 }}>
-                  Bài viết yêu thích
-                </Typography.Text>
-              </Link>
+              <Typography.Text style={{ fontSize: 15 }}>
+                Bài viết yêu thích
+              </Typography.Text>
               {account?.role !== RoleEnum.USER && (
                 <div className="flex flex-col gap-4 mt-6">
                   <Typography.Title level={5} type="secondary">

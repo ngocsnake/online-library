@@ -130,7 +130,9 @@ export default function PostCard({ item }: { item: any }) {
           <Flex gap={12} align="center">
             <Avatar>{post.author?.fullName?.charAt(0)?.toUpperCase()}</Avatar>
             <div>
-              <Typography.Text>{post.author?.fullName}</Typography.Text>
+              <Link href={`/forums/author/${post.author?._id}`}>
+                <Typography.Text>{post.author?.fullName}</Typography.Text>
+              </Link>
               <div style={{ color: "#878384", fontSize: 12 }}>
                 {timeAgo.format(new Date(post.createdAt as string))}
               </div>
@@ -152,7 +154,10 @@ export default function PostCard({ item }: { item: any }) {
           <Flex justify="space-between" style={{ marginBottom: -6 }}>
             <div className="flex items-center gap-4">
               {hashtag.map((item, index) => (
-                <Link key={index} href={`/forums?query=${item}`}>
+                <Link
+                  key={index}
+                  href={`/forums?query=${item.replace(/#/g, "%23")}`}
+                >
                   {item}
                 </Link>
               ))}

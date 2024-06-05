@@ -16,6 +16,7 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { toast } from "@/lib/utils/toast";
+import Link from "next/link";
 
 TimeAgo.addDefaultLocale(vi);
 
@@ -115,7 +116,9 @@ export default function CommentCard({
         <Flex gap={12} align="center">
           <Avatar>{data.author?.fullName?.charAt(0)?.toUpperCase()}</Avatar>
           <div>
-            <Typography.Text>{data.author?.fullName}</Typography.Text>
+            <Link href={`/forums/author/${data.author?._id}`}>
+              <Typography.Text>{data.author?.fullName}</Typography.Text>
+            </Link>
             <div style={{ color: "#878384", fontSize: 12 }}>
               {timeAgo.format(new Date(data.createdAt))}
             </div>
@@ -278,9 +281,11 @@ export default function CommentCard({
                         {item.author?.fullName?.charAt(0)?.toUpperCase()}
                       </Avatar>
                       <div>
-                        <Typography.Text>
-                          {item.author?.fullName}
-                        </Typography.Text>
+                        <Link href={`/forums/author/${item.author?._id}`}>
+                          <Typography.Text>
+                            {item.author?.fullName}
+                          </Typography.Text>
+                        </Link>
                         <div style={{ color: "#878384", fontSize: 12 }}>
                           {timeAgo.format(new Date(item.createdAt))}
                         </div>
