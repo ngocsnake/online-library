@@ -4,6 +4,7 @@ import Books from "@/app/home/components/Books";
 import Activities from "@/app/home/components/Activities";
 import Contact from "@/app/home/components/Contact";
 import LandingPageLayout from "@/components/layouts/LandingPageLayout";
+import PartnersAndCommunications from "@/app/home/components/PartnersAndCommunications";
 
 export default async function LandingPage() {
   return (
@@ -13,6 +14,7 @@ export default async function LandingPage() {
         <Introduction/>
         <Books/>
         <Activities/>
+        <PartnersAndCommunications/>
         <Contact/>
       </div>
     </LandingPageLayout>

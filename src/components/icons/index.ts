@@ -11,3 +11,4 @@ export * from "./Home";
 export * from "./Mail";
 export * from "./Send";
 export * from "./User";
+export * from "./Tiktok";

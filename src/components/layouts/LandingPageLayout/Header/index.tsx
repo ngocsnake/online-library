@@ -13,6 +13,7 @@ export const navigationConfigsLandingPage = [
   {key: "introduction", title: "Về D Free Book", path: "introduction"},
   {key: "books", title: "Sách", path: "books"},
   {key: "activities", title: "Hoạt động", path: "activities"},
+  {key: "partners-communications", title: "Đối tác & truyền thông", path: "partners-communications"},
   {key: "contact", title: "Liên hệ", path: "contact"}
 ]
 
