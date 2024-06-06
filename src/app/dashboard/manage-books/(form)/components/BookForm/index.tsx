@@ -272,7 +272,9 @@ function BookForm(props: FormProps) {
                     key={account._id}
                     value={account._id}
                   >
-                    {account.fullName} (xxx{account.phoneNumber?.slice(-3)})
+                    {account.fullName}
+                    {account.phoneNumber &&
+                      ` (xxx${account.phoneNumber?.slice(-3)})`}
                   </Select.Option>
                 ))}
               </Select>
