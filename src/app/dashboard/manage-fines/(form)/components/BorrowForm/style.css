@@ -1,9 +1,0 @@
-.return-date .ant-col {
-    display: flex;
-    justify-content: flex-end;
-    gap: 40px;
-}
-
-.return-date label {
-    margin-right: 20px;
-}

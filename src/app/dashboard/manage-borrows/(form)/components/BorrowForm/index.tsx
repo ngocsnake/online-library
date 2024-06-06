@@ -9,6 +9,7 @@ import {
 import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book, BookStatus } from "@/lib/models/book.model";
 import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
@@ -22,11 +23,12 @@ import {
   Row,
   Select,
   Typography,
+  message,
   theme,
 } from "antd";
 import dayjs from "dayjs";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
 
@@ -53,10 +55,12 @@ function BorrowForm(props: BorrowFormProps) {
         ...detail,
         borrowDate: dayjs(detail.borrowDate),
         returnDate: dayjs(detail.returnDate),
-        user: JSON.stringify(detail.user),
+        user: detail.user?._id,
         book: JSON.stringify(detail.book),
         library: detail?.library,
       });
+
+      setUserSelected(detail?.user);
       setDateLimit(detail?.borrowingDateLimit ?? 35);
     }
   }, [detail]);
@@ -64,6 +68,30 @@ function BorrowForm(props: BorrowFormProps) {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const nameDebounce = useDebounce(name);
+
+  const [email, setEmail] = useState("");
+  const [userSelected, setUserSelected] = useState<Partial<Account>>({});
+  const emailDebounce = useDebounce(email);
+
+  useDidMountEffect(() => {
+    const user = data?.accounts?.find(
+      (item: Account) => item.email === emailDebounce
+    );
+
+    if (user?._id) {
+      form.setFieldValue("user", user?._id);
+      form.setFieldValue("phoneNumber", user?.phoneNumber);
+      setUserSelected(user);
+    } else {
+      form.setFieldValue("user", undefined);
+      form.setFieldValue("phoneNumber", undefined);
+      setUserSelected({});
+
+      if (emailDebounce !== "") {
+        message.error("Không tìm thấy người dùng");
+      }
+    }
+  }, [emailDebounce]);
 
   const [data, getUsersByName] = useFormState(getAccountsAction, {
     accounts: [],
@@ -141,7 +169,6 @@ function BorrowForm(props: BorrowFormProps) {
   const onFinish = (values: any) => {
     setFormLoading(true);
     values.book = JSON.parse(values.book)._id;
-    values.user = JSON.parse(values.user)._id;
     values.borrowDate = new Date(values.borrowDate);
     values.returnDate = new Date(values.returnDate);
 
@@ -192,7 +219,12 @@ function BorrowForm(props: BorrowFormProps) {
           name={"user"}
           rules={[{ required: true, message: "Vui lòng chọn người mượn" }]}
         >
-          {action === FormAction.CREATE ? (
+          <Select disabled placeholder="Chọn người mượn">
+            <Select.Option value={userSelected?._id}>
+              {userSelected?.fullName}
+            </Select.Option>
+          </Select>
+          {/* {action === FormAction.CREATE ? (
             <Select
               showSearch
               className={"w-full"}
@@ -220,7 +252,9 @@ function BorrowForm(props: BorrowFormProps) {
                   key={account._id}
                   value={JSON.stringify(account)}
                 >
-                  {account.fullName} (xxx{account.phoneNumber?.slice(-3)})
+                  {account.fullName}
+                  {account.phoneNumber &&
+                    ` (xxx${account.phoneNumber?.slice(-3)})`}
                 </Select.Option>
               ))}
             </Select>
@@ -230,7 +264,7 @@ function BorrowForm(props: BorrowFormProps) {
                 {detail?.user?.fullName}
               </Select.Option>
             </Select>
-          )}
+          )} */}
         </Form.Item>
         <Form.Item
           label={
@@ -280,7 +314,14 @@ function BorrowForm(props: BorrowFormProps) {
           ]}
           name={"email"}
         >
-          <Input allowClear placeholder="Email" disabled={true} />
+          <Input
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            allowClear
+            placeholder="Email"
+            disabled={action === FormAction.UPDATE}
+          />
         </Form.Item>
         <Form.Item
           label={
