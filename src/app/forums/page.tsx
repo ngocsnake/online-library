@@ -8,18 +8,29 @@ import { postService } from "@/lib/services/post.service";
 import { Card, Col, Row, Skeleton, Typography } from "antd";
 import { useContext, useEffect } from "react";
 import PostCard from "./components/PostCard";
+import { usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function ForumPage() {
   const { account } = useContext(SessionContext);
+  const author = undefined;
   const [doGet, { data, loading }] = useApiRequest(postService.get);
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    doGet();
-  }, []);
+    const query = searchParams.get("query");
+    doGet({ query, author: author });
+  }, [pathname, searchParams]);
 
   return (
     <div className="h-full">
-      <ForumHeader totalDocs={data?.totalDocs} onFinish={doGet} />
+      <ForumHeader
+        author={author ? data?.docs?.[0]?.author : undefined}
+        totalDocs={data?.totalDocs}
+        onFinish={doGet}
+      />
       <Row className="h-full" gutter={48} style={{ overflow: "hidden" }}>
         <Col span={7} style={{ borderRight: "1px solid #e7e7e7" }}>
           <div className="flex items-end flex-col gap-4">
@@ -27,12 +38,16 @@ export default function ForumPage() {
               <Typography.Title level={5} type="secondary">
                 Hoạt động của tôi
               </Typography.Title>
-              <Typography.Text style={{ fontSize: 15 }}>
-                Bài viết của tôi
-              </Typography.Text>
-              <Typography.Text style={{ fontSize: 15 }}>
-                Bài viết yêu thích
-              </Typography.Text>
+              <Link href={`/forums/author/${account?._id}`}>
+                <Typography.Text style={{ fontSize: 15 }}>
+                  Bài viết của tôi
+                </Typography.Text>
+              </Link>
+              <Link href={`/forums/liked`}>
+                <Typography.Text style={{ fontSize: 15 }}>
+                  Bài viết yêu thích
+                </Typography.Text>
+              </Link>
               {account?.role !== RoleEnum.USER && (
                 <div className="flex flex-col gap-4 mt-6">
                   <Typography.Title level={5} type="secondary">

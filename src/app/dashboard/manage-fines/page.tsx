@@ -53,7 +53,7 @@ function ManageFines() {
   } = theme.useToken();
 
   useEffect(() => {
-    createQueryString({ query: query, page: undefined });
+    createQueryString({ query: query });
   }, [queryDebounce]);
 
   const createQueryString = useCallback(

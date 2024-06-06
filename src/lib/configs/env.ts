@@ -12,6 +12,10 @@ export const appEnv = {
   base: {
     mongoUri: getEnv<string>('MONGO_URI', false, 'Database is not configured'),
   },
+  maigun: {
+    domain: getEnv<string>('MAILGUN_DOMAIN', false, 'Mailgun domain is not configured'),
+    apiKey: getEnv<string>('MAILGUN_API_KEY', false, 'Mailgun key is not configured'),
+  },
   security: {
     google: {
       enabled: getEnv<boolean>('GOOGLE_ENABLED', false, '', false),

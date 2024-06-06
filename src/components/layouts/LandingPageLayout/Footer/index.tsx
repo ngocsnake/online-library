@@ -3,15 +3,16 @@
 import styles from "./styles.module.scss";
 import LogoMain from "@/assets/figures/logo-main.png";
 import {Col, Input, Row, Typography} from "antd";
-import {InstagramOutlined, SendOutlined, TwitterOutlined, YoutubeFilled} from "@ant-design/icons";
+import {InstagramFilled, SendOutlined, YoutubeFilled} from "@ant-design/icons";
 import {Link as LinkS} from "react-scroll/modules";
 import {Facebook} from "@/components/icons/Facebook";
 import Link from "next/link";
+import {Tiktok} from "@/components/icons";
 
 const socials = [
-  {key: "instagram", name: "Instagram", url: "https://www.instagram.com/dfree.book", icon: <InstagramOutlined/>},
+  {key: "instagram", name: "Instagram", url: "https://www.instagram.com/dfree.book", icon: <InstagramFilled/>},
   {key: "facebook", name: "Facebook", url: "https://www.facebook.com/dfreebook", icon: <Facebook/>},
-  {key: "twitter", name: "Twitter", url: "#", icon: <TwitterOutlined/>},
+  {key: "tiktok", name: "Tiktok", url: "https://www.tiktok.com/@thuviendfreebook ", icon: <Tiktok/>},
   {key: "youtube", name: "Youtube", url: "https://www.youtube.com/@dfreebook4067", icon: <YoutubeFilled/>}
 ]
 
@@ -20,6 +21,7 @@ export const pages = [
   {key: "introduction", title: "Về D Free Book", path: "introduction"},
   {key: "book", title: "Sách", path: "books"},
   {key: "activities", title: "Hoạt động", path: "activities"},
+  {key: "partners-communications", title: "Đối tác & truyền thông", path: "partners-communications"},
   {key: "contact", title: "Liên hệ", path: "contact"}
 ]
 
