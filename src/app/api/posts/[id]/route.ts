@@ -69,22 +69,67 @@ export async function DELETE(
     account?.role === RoleEnum.MANAGER;
 
   if (!hasPermission) {
-    if (!post) {
-      return Response.json(
-        {
-          success: false,
-        },
-        {
-          status: 403,
-        }
-      );
-    }
+    return Response.json(
+      {
+        success: false,
+      },
+      {
+        status: 403,
+      }
+    );
   }
 
   await PostModel.findByIdAndUpdate(
     postId,
     {
       isDelete: true,
+    },
+    { new: true }
+  );
+
+  return Response.json({ success: true });
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } },
+  res: Response
+) {
+  await dbService.connect();
+  const postId = params.id;
+  const post = await PostModel.findById(postId);
+  const payload = await request.json();
+
+  if (!postId || !post?._id) {
+    return Response.json(
+      {
+        success: false,
+      },
+      {
+        status: 404,
+      }
+    );
+  }
+
+  const { account } = await getSession();
+  const hasPermission =
+    account?.role == RoleEnum.ADMIN || account?.role === RoleEnum.MANAGER;
+
+  if (!hasPermission) {
+    return Response.json(
+      {
+        success: false,
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
+  await PostModel.findByIdAndUpdate(
+    postId,
+    {
+      status: payload.status,
     },
     { new: true }
   );

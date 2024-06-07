@@ -13,6 +13,9 @@ export default function ForumNavBar() {
         <Typography.Title level={5} type="secondary">
           Hoạt động của tôi
         </Typography.Title>
+        <Link href={`/forums`}>
+          <Typography.Text style={{ fontSize: 15 }}>Trang chủ</Typography.Text>
+        </Link>
         <Link href={`/forums/author/${account?._id}`}>
           <Typography.Text style={{ fontSize: 15 }}>
             Bài viết của tôi
@@ -28,12 +31,14 @@ export default function ForumNavBar() {
             <Typography.Title level={5} type="secondary">
               Quản trị
             </Typography.Title>
-            <Typography.Text style={{ fontSize: 15 }}>
-              Bài viết chờ duyệt
-            </Typography.Text>
-            <Typography.Text style={{ fontSize: 15 }}>
+            <Link href={`/forums/pending`}>
+              <Typography.Text style={{ fontSize: 15 }}>
+                Bài viết chờ duyệt
+              </Typography.Text>
+            </Link>
+            {/* <Typography.Text style={{ fontSize: 15 }}>
               Bài viết đã hủy
-            </Typography.Text>
+            </Typography.Text> */}
           </div>
         )}
       </div>

@@ -60,7 +60,7 @@ export default function ForumHeader({
       <Row gutter={48}>
         <Col span={7}>
           <Flex justify="end" style={{ marginRight: -20 }}>
-            {author && (
+            {pathname.includes("/forums/") && (
               <Button type="text" shape="circle" onClick={router.back}>
                 <LeftOutlined />
               </Button>

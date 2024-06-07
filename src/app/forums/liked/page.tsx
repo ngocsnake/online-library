@@ -3,31 +3,30 @@
 import ForumHeader from "@/app/forums/components/ForumHeader";
 import useApiRequest from "@/lib/hooks/useApiRequest";
 import { postService } from "@/lib/services/post.service";
-import { Card, Col, Row, Skeleton } from "antd";
+import { Card, Col, Pagination, Row, Skeleton } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ForumNavBar from "../components/ForumNavBar";
 import PostCard from "../components/PostCard";
 
 export default function LikedPage() {
-  const author = undefined;
   const [doGet, { data, loading }] = useApiRequest(postService.getLiked);
+  const [current, setCurrent] = useState(1);
+  useEffect(() => {
+    setCurrent(data?.page);
+  }, [data]);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const query = searchParams.get("query");
-    doGet({ query, author: author });
-  }, [pathname, searchParams]);
+    doGet({ query, limit: 20, page: current });
+  }, [pathname, searchParams, current]);
 
   return (
     <div className="h-full">
-      <ForumHeader
-        author={author ? data?.docs?.[0]?.author : undefined}
-        totalDocs={data?.totalDocs}
-        onFinish={doGet}
-      />
+      <ForumHeader totalDocs={data?.totalDocs} onFinish={doGet} />
       <Row className="h-full" gutter={48} style={{ overflow: "hidden" }}>
         <Col span={7} style={{ borderRight: "1px solid #e7e7e7" }}>
           <ForumNavBar />
@@ -61,6 +60,14 @@ export default function LikedPage() {
                     Không có dữ liệu.
                   </Card>
                 )}
+
+                <Pagination
+                  className="mt-4"
+                  current={current}
+                  onChange={setCurrent}
+                  pageSize={data?.limit}
+                  total={data?.totalDocs}
+                />
               </div>
             )}
           </div>

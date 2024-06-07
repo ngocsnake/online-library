@@ -1,7 +1,7 @@
 import { SessionContext } from "@/components/shared/SessionContext";
 import useRequest, { RequestStatus } from "@/lib/hooks/useRequest";
 import { RoleEnum } from "@/lib/models/account.model";
-import { IPost } from "@/lib/models/post.model";
+import { IPost, PostStatus } from "@/lib/models/post.model";
 import { postService } from "@/lib/services/post.service";
 import { extractHashtags, removeHashtags } from "@/lib/utils/hashtag";
 import {
@@ -12,6 +12,8 @@ import {
   HeartOutlined,
   LineOutlined,
   PushpinOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -35,6 +37,7 @@ export default function PostCard({ item }: { item: any }) {
   const { account } = useContext(SessionContext);
   const [post, setPost] = useState(item);
   const [doDelete, deleteStatus] = useRequest(postService.delete);
+  const [doUpdate, updateStatus] = useRequest(postService.update);
   const [doReaction, reactionStatus] = useRequest(postService.reaction);
   const [doPin, pinStatus] = useRequest(postService.pin);
 
@@ -66,22 +69,60 @@ export default function PostCard({ item }: { item: any }) {
       disabled: pinStatus.status === RequestStatus.PENDING,
     });
   }
-  items.push({
-    icon: <DeleteOutlined />,
-    label: "Xóa bài viết",
-    key: "delete",
-    onClick: () => {
-      Modal.confirm({
-        title: "Hành động này không thể hoàn tác!",
-        content: `Xác nhận xóa bài viết`,
-        okText: "Xóa",
-        cancelText: "Hủy",
-        onOk: () => {
-          doDelete(post._id);
-        },
-      });
-    },
-  });
+
+  if (post.status === PostStatus.APPROVED) {
+    items.push({
+      icon: <DeleteOutlined />,
+      label: "Xóa bài viết",
+      key: "delete",
+      onClick: () => {
+        Modal.confirm({
+          title: "Hành động này không thể hoàn tác!",
+          content: `Xác nhận xóa bài viết`,
+          okText: "Xóa",
+          cancelText: "Hủy",
+          onOk: () => {
+            doDelete(post._id);
+          },
+        });
+      },
+    });
+  }
+
+  if (post.status === PostStatus.PENDING) {
+    items.push({
+      icon: <CheckCircleOutlined />,
+      label: "Phê duyệt",
+      key: "aprrove",
+      onClick: () => {
+        Modal.confirm({
+          title: "Hành động này không thể hoàn tác!",
+          content: `Xác nhận duyệt bài viết`,
+          okText: "Tiếp tục",
+          cancelText: "Hủy",
+          onOk: () => {
+            doUpdate({ _id: post._id, status: PostStatus.APPROVED });
+          },
+        });
+      },
+    });
+    items.push({
+      icon: <CloseCircleOutlined />,
+      label: "Từ chối",
+      key: "decline",
+      onClick: () => {
+        Modal.confirm({
+          title: "Hành động này không thể hoàn tác!",
+          content: `Xác nhận từ chối bài viết`,
+          okText: "Tiếp tục",
+          cancelText: "Hủy",
+          onOk: () => {
+            doUpdate({ _id: post._id, status: PostStatus.REJECTED });
+          },
+        });
+      },
+    });
+  }
 
   useEffect(() => {
     if (reactionStatus.status === RequestStatus.FULFILLED) {
@@ -101,13 +142,20 @@ export default function PostCard({ item }: { item: any }) {
     }
   }, [deleteStatus.status]);
 
+  useEffect(() => {
+    if (updateStatus.status === RequestStatus.FULFILLED) {
+      message.success("Thành công");
+    }
+  }, [updateStatus.status]);
+
   const liked = !!post?.likes?.find(
     (item: any) =>
       item?.toString() === account?._id || item._id === account?._id
   );
 
   return (
-    !deleteStatus.data?.success && (
+    !deleteStatus.data?.success &&
+    !updateStatus.data?.success && (
       <div>
         <Card key={post._id} className="sticky post-card">
           {(account?.role === RoleEnum.ADMIN ||
@@ -131,7 +179,7 @@ export default function PostCard({ item }: { item: any }) {
             <Avatar>{post.author?.fullName?.charAt(0)?.toUpperCase()}</Avatar>
             <div>
               <Link href={`/forums/author/${post.author?._id}`}>
-                <Typography.Text>{post.author?.fullName} - {post.status}</Typography.Text>
+                <Typography.Text>{post.author?.fullName}</Typography.Text>
               </Link>
               <div style={{ color: "#878384", fontSize: 12 }}>
                 {timeAgo.format(new Date(post.createdAt as string))}
@@ -179,12 +227,14 @@ export default function PostCard({ item }: { item: any }) {
                   {post?.likes?.length ?? 0}
                 </Typography.Text>
               </div>
-              <div className="flex gap-2 items-center">
-                <CommentOutlined />
-                <Typography.Text className="ma-0">
-                  {post?.comments?.length ?? 0}
-                </Typography.Text>
-              </div>
+              <Link style={{ color: "black" }} href={`/forums/${post._id}`}>
+                <div className="flex gap-2 items-center">
+                  <CommentOutlined />
+                  <Typography.Text className="ma-0">
+                    {post?.comments?.length ?? 0}
+                  </Typography.Text>
+                </div>
+              </Link>
             </div>
           </Flex>
         </Card>
