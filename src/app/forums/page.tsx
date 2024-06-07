@@ -1,18 +1,15 @@
 "use client";
 
 import ForumHeader from "@/app/forums/components/ForumHeader";
-import { SessionContext } from "@/components/shared/SessionContext";
 import useApiRequest from "@/lib/hooks/useApiRequest";
-import { RoleEnum } from "@/lib/models/account.model";
 import { postService } from "@/lib/services/post.service";
-import { Card, Col, Row, Skeleton, Typography } from "antd";
-import { useContext, useEffect } from "react";
-import PostCard from "./components/PostCard";
+import { Card, Col, Row, Skeleton } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useEffect } from "react";
+import ForumNavBar from "./components/ForumNavBar";
+import PostCard from "./components/PostCard";
 
 export default function ForumPage() {
-  const { account } = useContext(SessionContext);
   const author = undefined;
   const [doGet, { data, loading }] = useApiRequest(postService.get);
 
@@ -33,36 +30,7 @@ export default function ForumPage() {
       />
       <Row className="h-full" gutter={48} style={{ overflow: "hidden" }}>
         <Col span={7} style={{ borderRight: "1px solid #e7e7e7" }}>
-          <div className="flex items-end flex-col gap-4">
-            <div className="flex flex-col gap-4">
-              <Typography.Title level={5} type="secondary">
-                Hoạt động của tôi
-              </Typography.Title>
-              <Link href={`/forums/author/${account?._id}`}>
-                <Typography.Text style={{ fontSize: 15 }}>
-                  Bài viết của tôi
-                </Typography.Text>
-              </Link>
-              <Link href={`/forums/liked`}>
-                <Typography.Text style={{ fontSize: 15 }}>
-                  Bài viết yêu thích
-                </Typography.Text>
-              </Link>
-              {account?.role !== RoleEnum.USER && (
-                <div className="flex flex-col gap-4 mt-6">
-                  <Typography.Title level={5} type="secondary">
-                    Quản trị
-                  </Typography.Title>
-                  <Typography.Text style={{ fontSize: 15 }}>
-                    Bài viết chờ duyệt
-                  </Typography.Text>
-                  <Typography.Text style={{ fontSize: 15 }}>
-                    Bài viết đã hủy
-                  </Typography.Text>
-                </div>
-              )}
-            </div>
-          </div>
+          <ForumNavBar />
         </Col>
         <Col
           span={10}

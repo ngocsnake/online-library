@@ -131,7 +131,7 @@ export default function PostCard({ item }: { item: any }) {
             <Avatar>{post.author?.fullName?.charAt(0)?.toUpperCase()}</Avatar>
             <div>
               <Link href={`/forums/author/${post.author?._id}`}>
-                <Typography.Text>{post.author?.fullName}</Typography.Text>
+                <Typography.Text>{post.author?.fullName} - {post.status}</Typography.Text>
               </Link>
               <div style={{ color: "#878384", fontSize: 12 }}>
                 {timeAgo.format(new Date(post.createdAt as string))}

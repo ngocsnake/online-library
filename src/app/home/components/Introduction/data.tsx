@@ -3,7 +3,7 @@ import {Book, Quotes, User} from "@/components/icons";
 export const introLibrary = [
   {
     id: "1",
-    address: "Thời gian mở cửa: 8h30 - 22h mỗi ngày. Số 107, khu tập thể A5, ngõ 128C Đại La. Liên hệ 0962.188.248",
+    address: "Thời gian mở cửa: 8h30 - 22h mỗi ngày. Địa chỉ: Số 107, khu tập thể A5, ngõ 128C Đại La. Liên hệ 0962.188.248",
     title: "Cơ sở Đại La",
     description: [
       "",

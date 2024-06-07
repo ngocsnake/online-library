@@ -90,7 +90,7 @@ export default function ManageBookHeader() {
       </div>
 
       <div className={"flex justify-between items-center gap-8"}>
-        <Button icon={<UploadOutlined />}>Tải lên</Button>
+        <Button disabled icon={<UploadOutlined />}>Tải lên</Button>
         <Button
           type={"primary"}
           onClick={() => {
