@@ -17,11 +17,11 @@ export async function PATCH(
     account?.role === RoleEnum.USER
   ) {
     return Response.json(
-      { sucesss: false, message: "Không thể hủy phiếu mượn" },
+      { success: false, message: "Không thể hủy phiếu mượn" },
       { status: 403 }
     );
   }
 
   await borrowService.declineBorrow(params.id);
-  return Response.json({ sucesss: true, message: "Đã hủy phiếu mượn" });
+  return Response.json({ success: true, message: "Đã hủy phiếu mượn" });
 }

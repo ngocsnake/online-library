@@ -25,6 +25,13 @@ class PostService {
     }).then((res) => res.json());
   }
 
+  async update(payload: any) {
+    return fetch(`/api/posts/${payload._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }).then((res) => res.json());
+  }
+
   async get(queries: GetPostParams) {
     return fetch(`/api/posts?${objectToParams(queries)}`).then((res) =>
       res.json()
@@ -33,6 +40,12 @@ class PostService {
 
   async getLiked(queries: GetPostParams) {
     return fetch(`/api/posts/liked?${objectToParams(queries)}`).then((res) =>
+      res.json()
+    );
+  }
+
+  async getPending(queries: GetPostParams) {
+    return fetch(`/api/posts/pending?${objectToParams(queries)}`).then((res) =>
       res.json()
     );
   }
