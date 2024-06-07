@@ -3,7 +3,7 @@ import { borrowService } from "@/lib/services/borrow.service";
 import { dbService } from "@/lib/services/db.service";
 import { getSession } from "@/lib/utils/getSession";
 
-export async function GET(
+export async function PATCH(
   request: Request,
   { params }: { params: { id: string } },
   res: Response
@@ -23,8 +23,5 @@ export async function GET(
   }
 
   await borrowService.declineBorrow(params.id);
-  return Response.json(
-    { sucesss: true, message: "Đã hủy phiếu mượn" },
-    { status: 403 }
-  );
+  return Response.json({ sucesss: true, message: "Đã hủy phiếu mượn" });
 }
