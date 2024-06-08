@@ -6,10 +6,9 @@ export default function RemoveAccount() {
   return (
     <div
       style={{
-        marginTop: 124,
-        maxWidth: 1024,
-        margin: "0 auto",
-        padding: "60px 0",
+        maxWidth: 1176,
+        margin: "84px auto 0 auto",
+        padding: "60px 12px",
       }}
     >
       <Typography.Title level={3}>Remove account</Typography.Title>
