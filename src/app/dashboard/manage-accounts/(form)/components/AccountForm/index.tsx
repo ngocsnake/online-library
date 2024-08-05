@@ -1,24 +1,26 @@
-"use client";
+'use client';
 import {
   createAccountAction,
   updateAccountAction,
-} from "@/app/dashboard/manage-accounts/action";
-import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
-import { RoleEnum } from "@/lib/models/account.model";
+} from '@/app/dashboard/manage-accounts/action';
+import { useDidMountEffect } from '@/lib/hooks/useDidMountEffect';
+import { RoleEnum } from '@/lib/models/account.model';
 import {
   Button,
   Card,
+  Checkbox,
   DatePicker,
+  Flex,
   Form,
   Input,
   Radio,
   Typography,
   message,
-} from "antd";
-import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+} from 'antd';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
 
 function AccountForm({
   account,
@@ -31,14 +33,15 @@ function AccountForm({
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [state, formAction] = useFormState(createAccountAction, {} as any);
+  const [verified, setVerified] = useState(false);
   const [updateStatus, updateAccount] = useFormState(updateAccountAction, {
     success: false,
-    message: "",
+    message: '',
   });
 
   useEffect(() => {
     if (state?.message) {
-      message[state?.success ? "success" : "error"](state?.message);
+      message[state?.success ? 'success' : 'error'](state?.message);
     }
     if (state?.success) {
       router.back();
@@ -47,7 +50,7 @@ function AccountForm({
 
   useEffect(() => {
     if (updateStatus.message) {
-      message[updateStatus.success ? "success" : "error"](updateStatus.message);
+      message[updateStatus.success ? 'success' : 'error'](updateStatus.message);
     }
     if (updateStatus?.success && onComplete) {
       onComplete();
@@ -66,7 +69,7 @@ function AccountForm({
     if (account) {
       form.setFieldsValue({
         ...account,
-        birthday: account.birthday ? dayjs(account.birthday) : "",
+        birthday: account.birthday ? dayjs(account.birthday) : '',
       });
     }
   }, [account]);
@@ -79,19 +82,34 @@ function AccountForm({
       values._id = account._id;
       updateAccount(values);
     } else {
+      values.status = verified ? 'verified' : 'unverified';
       formAction(values);
     }
   };
 
   return (
-    <Card style={{ width: 714, margin: "0 auto" }}>
-      <Typography.Title level={4} className="mb-8">
-        {account ? "Cập nhật" : "Thêm"} người dùng
-      </Typography.Title>
+    <Card style={{ width: 714, margin: '0 auto' }}>
+      <Flex justify="space-between" className="mb-4">
+        <Typography.Title level={4}>
+          {account ? 'Cập nhật' : 'Thêm'} người dùng
+        </Typography.Title>
+        {!account && (
+          <Flex align="center">
+            <Checkbox
+              checked={verified}
+              onClick={() => {
+                setVerified((prev) => !prev);
+              }}
+            >
+              Không cần xác thực email
+            </Checkbox>
+          </Flex>
+        )}
+      </Flex>
       <Form
         disabled={loading}
         onFinish={onFinish}
-        labelCol={{ flex: "200px" }}
+        labelCol={{ flex: '200px' }}
         labelAlign="left"
         labelWrap
         form={form}
@@ -100,125 +118,128 @@ function AccountForm({
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập họ tên!",
+              message: 'Vui lòng nhập họ tên!',
               whitespace: true,
             },
             {
               max: 30,
-              message: "Họ và tên tối đa 30 kí tự",
+              message: 'Họ và tên tối đa 30 kí tự',
             },
           ]}
           name="fullName"
-          label={"Họ và tên"}
+          label={'Họ và tên'}
         >
-          <Input allowClear placeholder={"Nguyễn Văn A"} disabled />
+          <Input allowClear placeholder={'Nguyễn Văn A'} />
         </Form.Item>
         <Form.Item
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập email!",
+              message: 'Vui lòng nhập email!',
               whitespace: true,
             },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Email không hợp lệ",
+              message: 'Email không hợp lệ',
             },
           ]}
           name="email"
-          label={"Email"}
+          label={'Email'}
         >
           <Input
             allowClear
             disabled={!!account}
-            placeholder={"example@gmail.com"}
+            placeholder={'example@gmail.com'}
           />
         </Form.Item>
         <Form.Item
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập số điện thoại",
+              message: 'Vui lòng nhập số điện thoại',
               whitespace: true,
             },
             {
               min: 10,
-              message: "Số điện thoại tối thiểu 10 kí tự",
+              message: 'Số điện thoại tối thiểu 10 kí tự',
             },
             {
               max: 11,
-              message: "Số điện thoại tối đa 11 kí tự",
+              message: 'Số điện thoại tối đa 11 kí tự',
             },
             {
               pattern: /^(?:\d*)$/,
-              message: "Số điện thoại không hợp lệ",
+              message: 'Số điện thoại không hợp lệ',
             },
           ]}
           name="phoneNumber"
-          label={"Số điện thoại"}
+          label={'Số điện thoại'}
         >
-          <Input allowClear placeholder={"Số điện thoại"} />
+          <Input allowClear placeholder={'Số điện thoại'} />
         </Form.Item>
         {account?.role !== RoleEnum.USER && (
           <>
-            <Form.Item name="userId" label={"Mã người dùng"}>
-              <Input allowClear placeholder={"Mã người dùng"} />
+            <Form.Item name="userId" label={'Mã người dùng'}>
+              <Input allowClear placeholder={'Mã người dùng'} />
             </Form.Item>
-            <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
+            <Form.Item name="role" label={'Vai trò'} initialValue={'user'}>
               <Radio.Group
                 options={[
                   {
-                    label: "Bạn đọc",
-                    value: "user",
+                    label: 'Bạn đọc',
+                    value: 'user',
                   },
                   {
-                    label: "Thủ thư",
-                    value: "manager",
+                    label: 'Thủ thư',
+                    value: 'manager',
                   },
                   {
-                    label: "Quản trị viên",
-                    value: "admin",
+                    label: 'Quản trị viên',
+                    value: 'admin',
                   },
                 ]}
               />
             </Form.Item>
           </>
         )}
-        <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
-          <Input allowClear placeholder={"Số CCCD/CMND"} />
+        <Form.Item name="identityNumber" label={'Số CCCD/CMND'}>
+          <Input allowClear placeholder={'Số CCCD/CMND'} />
         </Form.Item>
-        <Form.Item label={"Ngày sinh"} name={"birthday"}>
+        <Form.Item name="userId" label={'Mã bạn đọc'}>
+          <Input allowClear placeholder={'Mã bạn đọc'} />
+        </Form.Item>
+        <Form.Item label={'Ngày sinh'} name={'birthday'}>
           <DatePicker
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             format="DD/MM/YYYY"
             disabledDate={(current) => {
               return dayjs().diff(current) < 0;
             }}
           />
         </Form.Item>
-        <Form.Item name="gender" label={"Giới tính"} initialValue={"male"}>
+        <Form.Item name="gender" label={'Giới tính'} initialValue={'male'}>
           <Radio.Group
             options={[
               {
-                label: "Nam",
-                value: "male",
+                label: 'Nam',
+                value: 'male',
               },
               {
-                label: "Nữ",
-                value: "female",
+                label: 'Nữ',
+                value: 'female',
               },
               {
-                label: "Khác",
-                value: "orther",
+                label: 'Khác',
+                value: 'orther',
               },
             ]}
           />
         </Form.Item>
-        <Form.Item name="address" label={"Địa chỉ"}>
-          <Input.TextArea placeholder={"Địa chỉ"} />
+        <Form.Item name="address" label={'Địa chỉ'}>
+          <Input.TextArea placeholder={'Địa chỉ'} />
         </Form.Item>
-        <div className={"flex justify-end"}>
-          <div className={"flex gap-9"}>
+        <div className={'flex justify-end'}>
+          <div className={'flex gap-9'}>
             <Button
               onClick={() => {
                 router.back();
@@ -226,8 +247,8 @@ function AccountForm({
             >
               Hủy bỏ
             </Button>
-            <Button htmlType="submit" type={"primary"} loading={loading}>
-              {account ? "Lưu lại" : "Thêm người dùng"}
+            <Button htmlType="submit" type={'primary'} loading={loading}>
+              {account ? 'Lưu lại' : 'Thêm người dùng'}
             </Button>
           </div>
         </div>

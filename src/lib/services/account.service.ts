@@ -146,7 +146,7 @@ class AccountService {
       birthday: payload.birthday,
       joinDate: new Date(),
       role: payload.role || RoleEnum.USER,
-      status: "unverified",
+      status: payload.status,
       identityNumber: payload.identityNumber,
       phoneNumber: payload.phoneNumber,
       gender: payload.gender,

@@ -1,23 +1,24 @@
-"use client";
+'use client';
 
-import { getAccountsAction } from "@/app/dashboard/manage-accounts/action";
-import { getBookAction } from "@/app/dashboard/manage-books/action";
+import { getAccountsAction } from '@/app/dashboard/manage-accounts/action';
+import { getBookAction } from '@/app/dashboard/manage-books/action';
 import {
   createBorrowAction,
   updateBorrowAction,
-} from "@/app/dashboard/manage-borrows/action";
-import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
-import { FormAction } from "@/constants/app.constant";
-import useDebounce from "@/lib/hooks/useDebounce";
-import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
-import { Book, BookStatus } from "@/lib/models/book.model";
-import { Location } from "@/lib/models/library.model";
-import { toast } from "@/lib/utils/toast";
+} from '@/app/dashboard/manage-borrows/action';
+import { getLibraryAction } from '@/app/dashboard/manage-locations/action';
+import { FormAction } from '@/constants/app.constant';
+import useDebounce from '@/lib/hooks/useDebounce';
+import { useDidMountEffect } from '@/lib/hooks/useDidMountEffect';
+import { Book, BookStatus } from '@/lib/models/book.model';
+import { Location } from '@/lib/models/library.model';
+import { toast } from '@/lib/utils/toast';
 import {
   Button,
   Card,
   Col,
   DatePicker,
+  Flex,
   Form,
   Input,
   Row,
@@ -25,12 +26,12 @@ import {
   Typography,
   message,
   theme,
-} from "antd";
-import dayjs from "dayjs";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
-import "./style.css";
+} from 'antd';
+import dayjs from 'dayjs';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
+import './style.css';
 
 interface BorrowFormProps {
   action: FormAction;
@@ -38,16 +39,22 @@ interface BorrowFormProps {
 }
 
 function BorrowForm(props: BorrowFormProps) {
-  const { action, detail } = props;
-  const searchParams = useSearchParams();
   const {
     token: { colorPrimary },
   } = theme.useToken();
+  const { action, detail } = props;
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const [form] = Form.useForm();
   const [formLoading, setFormLoading] = useState(false);
   const [dateLimit, setDateLimit] = useState(35);
-  const router = useRouter();
-  const [form] = Form.useForm();
+  const [email, setEmail] = useState('');
+  const [userSelected, setUserSelected] = useState<Partial<Account>>({});
+  const emailDebounce = useDebounce(email);
+  const [bookName, setBookName] = useState('');
+  const [bookLoading, setBookLoading] = useState(false);
+  const bookDebounce = useDebounce(bookName);
 
   useEffect(() => {
     if (detail) {
@@ -65,32 +72,12 @@ function BorrowForm(props: BorrowFormProps) {
     }
   }, [detail]);
 
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const nameDebounce = useDebounce(name);
-
-  const [email, setEmail] = useState("");
-  const [userSelected, setUserSelected] = useState<Partial<Account>>({});
-  const emailDebounce = useDebounce(email);
-
   useDidMountEffect(() => {
-    const user = data?.accounts?.find(
-      (item: Account) => item.email === emailDebounce
-    );
-
-    if (user?._id) {
-      form.setFieldValue("user", user?._id);
-      form.setFieldValue("phoneNumber", user?.phoneNumber);
-      setUserSelected(user);
-    } else {
-      form.setFieldValue("user", undefined);
-      form.setFieldValue("phoneNumber", undefined);
-      setUserSelected({});
-
-      if (emailDebounce !== "") {
-        message.error("Không tìm thấy người dùng");
-      }
-    }
+    getUsersByName({
+      filter: {
+        email: emailDebounce,
+      },
+    });
   }, [emailDebounce]);
 
   const [data, getUsersByName] = useFormState(getAccountsAction, {
@@ -101,14 +88,26 @@ function BorrowForm(props: BorrowFormProps) {
     totalDocs: 0,
   });
 
-  useEffect(() => {
-    getUsersByName({ ...data, filter: { fullName: nameDebounce } });
-    setLoading(false);
-  }, [nameDebounce]);
+  useDidMountEffect(() => {
+    const user = data?.accounts?.find(
+      (item: Account) => item.email === emailDebounce
+    );
 
-  const [bookName, setBookName] = useState("");
-  const [bookLoading, setBookLoading] = useState(false);
-  const bookDebounce = useDebounce(bookName);
+    if (user?._id) {
+      form.setFieldValue('user', user?._id);
+      form.setFieldValue('phoneNumber', user?.phoneNumber);
+      setUserSelected(user);
+    } else {
+      form.setFieldValue('user', undefined);
+      form.setFieldValue('phoneNumber', undefined);
+      setUserSelected({});
+
+      if (emailDebounce !== '') {
+        message.error('Không tìm thấy người dùng');
+      }
+    }
+  }, [data]);
+
   const [books, getBooks] = useFormState(getBookAction, {
     data: [],
     limit: 50,
@@ -117,13 +116,13 @@ function BorrowForm(props: BorrowFormProps) {
     totalDocs: 0,
   });
 
-  const [libraries, getLibaries] = useFormState(getLibraryAction, {
+  const [libraries, getLibraries] = useFormState(getLibraryAction, {
     success: false,
-    message: "",
+    message: '',
   });
 
   useEffect(() => {
-    getLibaries();
+    getLibraries();
   }, []);
 
   useEffect(() => {
@@ -132,7 +131,7 @@ function BorrowForm(props: BorrowFormProps) {
       filter: {
         name: bookDebounce,
         status: action === FormAction.CREATE ? BookStatus.AVAILABLE : undefined,
-        library: searchParams.get("library"),
+        library: searchParams.get('library'),
       },
     });
     setBookLoading(false);
@@ -140,7 +139,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   const [createState, createAction] = useFormState(createBorrowAction, {
     success: false,
-    message: "",
+    message: '',
   });
 
   useEffect(() => {
@@ -152,7 +151,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   const [updateState, updateAction] = useFormState(updateBorrowAction, {
     success: false,
-    message: "",
+    message: '',
   });
 
   useEffect(() => {
@@ -181,34 +180,40 @@ function BorrowForm(props: BorrowFormProps) {
   };
 
   useEffect(() => {
-    if (searchParams.get("book")) {
+    if (searchParams.get('book')) {
       const selected: Book | undefined = books?.data?.find(
-        (item: any) => item._id === searchParams.get("book")
+        (item: any) => item._id === searchParams.get('book')
       );
 
       if (selected) {
-        form.setFieldValue("book", JSON.stringify(selected));
-        form.setFieldValue("library", selected?.library?._id);
+        form.setFieldValue('book', JSON.stringify(selected));
+        form.setFieldValue('library', selected?.library?._id);
+        form.setFieldValue(
+          'returnDate',
+          dayjs().add(selected.borrowingDateLimit, 'day')
+        );
         setDateLimit(selected?.borrowingDateLimit ?? 35);
       } else {
-        form.setFieldValue("book", undefined);
+        form.setFieldValue('book', undefined);
       }
     }
   }, [books]);
 
   return (
-    <Card style={{ maxWidth: 714, margin: "0 auto" }}>
-      <Typography.Title level={4} className="mb-8">
-        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm mới"} phiếu mượn
-      </Typography.Title>
+    <Card style={{ maxWidth: 714, margin: '0 auto' }}>
+      <Flex align="center" className="mb-8" justify="space-between">
+        <Typography.Title level={4}>
+          {action == FormAction.UPDATE ? 'Cập nhật' : 'Thêm mới'} phiếu mượn
+        </Typography.Title>
+      </Flex>
       <Form
         onFinish={onFinish}
         form={form}
         disabled={formLoading}
-        labelCol={{ flex: "200px" }}
+        labelCol={{ flex: '200px' }}
         labelAlign="left"
         labelWrap
-        className={"form-item-label-no-colon"}
+        className={'form-item-label-no-colon'}
       >
         <Form.Item
           label={
@@ -216,55 +221,14 @@ function BorrowForm(props: BorrowFormProps) {
               Họ và tên
             </Typography.Text>
           }
-          name={"user"}
-          rules={[{ required: true, message: "Vui lòng chọn người mượn" }]}
+          name={'user'}
+          rules={[{ required: true, message: 'Vui lòng chọn người mượn' }]}
         >
           <Select disabled placeholder="Chọn người mượn">
             <Select.Option value={userSelected?._id}>
               {userSelected?.fullName}
             </Select.Option>
           </Select>
-          {/* {action === FormAction.CREATE ? (
-            <Select
-              showSearch
-              className={"w-full"}
-              placeholder={"Chọn người mượn"}
-              onSearch={(e) => {
-                setName(e);
-                setLoading(true);
-              }}
-              loading={loading}
-              filterOption={(input, option: any) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              onChange={(e) => {
-                const account: Account = JSON.parse(e);
-                form.setFieldValue("phoneNumber", account.phoneNumber);
-                form.setFieldValue("email", account.email);
-                form.setFieldValue("address", account.address);
-              }}
-            >
-              {data.accounts.map((account: Account) => (
-                <Select.Option
-                  label={account.fullName}
-                  key={account._id}
-                  value={JSON.stringify(account)}
-                >
-                  {account.fullName}
-                  {account.phoneNumber &&
-                    ` (xxx${account.phoneNumber?.slice(-3)})`}
-                </Select.Option>
-              ))}
-            </Select>
-          ) : (
-            <Select disabled>
-              <Select.Option value={JSON.stringify(detail.user)}>
-                {detail?.user?.fullName}
-              </Select.Option>
-            </Select>
-          )} */}
         </Form.Item>
         <Form.Item
           label={
@@ -275,26 +239,27 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập số điện thoại",
+              message: 'Vui lòng nhập số điện thoại',
               whitespace: true,
             },
             {
               min: 10,
-              message: "Số điện thoại tối thiểu 10 kí tự",
+              message: 'Số điện thoại tối thiểu 10 kí tự',
             },
             {
               max: 11,
-              message: "Số điện thoại tối đa 11 kí tự",
+              message: 'Số điện thoại tối đa 11 kí tự',
             },
             {
               pattern: /^(?:\d*)$/,
-              message: "Số điện thoại không hợp lệ",
+              message: 'Số điện thoại không hợp lệ',
             },
           ]}
-          name={"phoneNumber"}
+          name={'phoneNumber'}
         >
           <Input allowClear placeholder="Số điện thoại" />
         </Form.Item>
+
         <Form.Item
           label={
             <Typography.Text style={{ color: colorPrimary }}>
@@ -304,15 +269,15 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập email",
+              message: 'Vui lòng nhập email',
               whitespace: true,
             },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Email không hợp lệ",
+              message: 'Email không hợp lệ',
             },
           ]}
-          name={"email"}
+          name={'email'}
         >
           <Input
             onChange={(e) => {
@@ -332,13 +297,13 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập địa chỉ",
+              message: 'Vui lòng nhập địa chỉ',
               whitespace: true,
             },
           ]}
-          name={"address"}
+          name={'address'}
         >
-          <Input.TextArea placeholder={"Địa chỉ người nhận"} />
+          <Input.TextArea placeholder={'Địa chỉ người nhận'} />
         </Form.Item>
         <Form.Item
           label={
@@ -346,12 +311,12 @@ function BorrowForm(props: BorrowFormProps) {
               Thư viện
             </Typography.Text>
           }
-          name={"library"}
-          rules={[{ required: true, message: "Vui lòng chọn thư viện" }]}
+          name={'library'}
+          rules={[{ required: true, message: 'Vui lòng chọn thư viện' }]}
         >
           <Select
             disabled={
-              action === FormAction.UPDATE || !!searchParams.get("book")
+              action === FormAction.UPDATE || !!searchParams.get('book')
             }
             onChange={(e) => {
               getBooks({
@@ -362,7 +327,7 @@ function BorrowForm(props: BorrowFormProps) {
                   library: e,
                 },
               });
-              form.setFieldValue("book", undefined);
+              form.setFieldValue('book', undefined);
             }}
             placeholder="Chọn thư viện"
           >
@@ -381,16 +346,16 @@ function BorrowForm(props: BorrowFormProps) {
               Sách mượn
             </Typography.Text>
           }
-          name={"book"}
-          rules={[{ required: true, message: "Vui lòng chọn sách muốn mượn" }]}
+          name={'book'}
+          rules={[{ required: true, message: 'Vui lòng chọn sách muốn mượn' }]}
         >
           <Select
             disabled={
-              action === FormAction.UPDATE || !!searchParams.get("book")
+              action === FormAction.UPDATE || !!searchParams.get('book')
             }
             showSearch
-            className={"w-full"}
-            placeholder={"Chọn sách mượn"}
+            className={'w-full'}
+            placeholder={'Chọn sách mượn'}
             onSearch={(e) => {
               setBookName(e);
               setBookLoading(true);
@@ -401,7 +366,7 @@ function BorrowForm(props: BorrowFormProps) {
             }}
             loading={bookLoading}
             filterOption={(input, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
           >
             {books?.data.map((book: Book) => {
@@ -426,13 +391,13 @@ function BorrowForm(props: BorrowFormProps) {
                 </Typography.Text>
               }
               name="borrowDate"
-              rules={[{ required: true, message: "Vui lòng chọn ngày mượn" }]}
+              rules={[{ required: true, message: 'Vui lòng chọn ngày mượn' }]}
               initialValue={dayjs()}
             >
               <DatePicker
                 disabled={action === FormAction.UPDATE}
                 format="DD/MM/YYYY"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 disabledDate={(current) => {
                   return dayjs().diff(current) < 0;
                 }}
@@ -447,16 +412,16 @@ function BorrowForm(props: BorrowFormProps) {
                 </Typography.Text>
               }
               name="returnDate"
-              rules={[{ required: true, message: "Vui lòng chọn ngày trả" }]}
+              rules={[{ required: true, message: 'Vui lòng chọn ngày trả' }]}
             >
               <DatePicker
                 format="DD/MM/YYYY"
                 name="returnDate"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 disabledDate={(current) => {
                   return (
                     dayjs().diff(current) > 0 ||
-                    dayjs(current).diff(dayjs(), "day") > dateLimit
+                    dayjs(current).diff(dayjs(), 'day') > dateLimit
                   );
                 }}
               />
@@ -471,13 +436,13 @@ function BorrowForm(props: BorrowFormProps) {
           }
           name="note"
         >
-          <Input.TextArea placeholder={"Ghi chú"} />
+          <Input.TextArea placeholder={'Ghi chú'} />
         </Form.Item>
-        <div className={"flex justify-end"}>
-          <div className={"flex gap-9"}>
+        <div className={'flex justify-end'}>
+          <div className={'flex gap-9'}>
             <Button onClick={router.back}>Hủy bỏ</Button>
-            <Button type={"primary"} htmlType="submit" loading={formLoading}>
-              {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
+            <Button type={'primary'} htmlType="submit" loading={formLoading}>
+              {FormAction.CREATE === action ? ' Thêm' : 'Cập nhật'}
             </Button>
           </div>
         </div>
