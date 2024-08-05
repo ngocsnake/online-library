@@ -56,8 +56,8 @@ export default function Introduction() {
 
                 <Typography.Title className={styles.title}>{item.title}</Typography.Title>
                 <div>
-                  {item.description.map(item => (
-                    <div className={styles.description} dangerouslySetInnerHTML={{__html: item}}></div>
+                  {item.description.map((item, index) => (
+                    <div key={index} className={styles.description} dangerouslySetInnerHTML={{__html: item}}></div>
                   ))}
                 </div>
               </div>
