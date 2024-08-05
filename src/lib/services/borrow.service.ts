@@ -151,6 +151,7 @@ class BorrowService {
                 $or: [
                   { "book.name": { $regex: new RegExp(query.query, "i") } },
                   { "user.fullName": { $regex: new RegExp(query.query, "i") } },
+                  { "user.userId": { $regex: new RegExp(query.query, "i") } },
                 ],
                 "book._id": { $in: existingBookIds },
                 "user._id": { $in: existingUserIds },
